@@ -1,0 +1,26 @@
+name: Daily Sync Upstream
+
+on:
+  schedule:
+    # UTC 时间 20:00 运行（对应北京时间 UTC+8 的凌晨 4:00）
+    - cron: '0 20 * * *'
+  # 支持手动触发测试
+  workflow_dispatch:
+
+jobs:
+  sync_latest_from_upstream:
+    name: Sync latest commits from upstream repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          ref: main  # 如果原仓库的主分支是 master，请修改为 master
+
+      - name: Sync Upstream
+        uses: arolla/pull-upstream-repo@v1.0.0
+        with:
+          upstream_repo: "https://github.com/dc021026/usque-custom-pro.git"
+          upstream_branch: "main"  # 上游分支名称
+          branch: "main"           # 你的分支名称
+          token: ${{ secrets.GITHUB_TOKEN }}
